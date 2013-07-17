@@ -32,13 +32,12 @@ function availableSensors() {
 }
 
 function readSensor(name, callback) {
-    console.log(name);
     var sensor = sensors[name];
     if (sensor === undefined) {
         throw "No such sensor: " + name;
     }
 
-    var sensor_path = "/sys/bus/w1/devices/" + sensor['id'] + "/w1_slave";
+    var sensor_path = "/sys/bus/w1/devices/" + sensor.id + "/w1_slave";
     fs.exists(sensor_path, function(exists) {
         if (!exists) {
             throw sensor_path + " doesn't exist";
@@ -55,7 +54,7 @@ function readSensor(name, callback) {
                 callback({'error': 'Failed to read sensor'});
                 return;
             }
-            
+
             var temp_pattern = /t=\d*/;
             var temp_string = temp_pattern.exec(lines[1]);
             if (temp_string === null) {
