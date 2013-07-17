@@ -72,7 +72,7 @@ function initSensors(sensors_file) {
             throw "Invalid formatting in " + sensors_file;
         }
         sensors[elements[0]] = {'id': elements[1],
-                      'warning-temp': elements[2], 'alarm-temp': elements[3]};
+                      'alarm_temp': elements[2], 'panic_temp': elements[3]};
     }
     cache.global_alarm = false;
     cache.global_panic = false;
@@ -104,19 +104,29 @@ function readSensorHW(name, callback) {
                 throw "Invalid sensor data: " + data;
             }
             if (!lines[0].match(/ YES$/)) {
+                console.log('Checksum error reading sensor ' + name);
                 cache[name] = undefined;
+                callback();
                 return;
             }
 
             var temp_pattern = /t=\d*/;
             var temp_string = temp_pattern.exec(lines[1]);
             if (temp_string === null) {
+                console.log('Parsing error reading sensor ' + name);
                 cache[name] = undefined;
+                callback();
                 return;
             }
             temp_string = String(temp_string).substr(2);
             var temp = parseFloat(temp_string) / 1000;
-            cache[name] = {'temp': temp, 'alarm': false, 'panic': false};
+
+            var panic = temp > sensor.panic_temp ? true: false;
+            var alarm = temp > sensor.warning_temp ? true: false;
+            cache.global_panic |= panic;
+            cache.global_alarm |= alarm;
+
+            cache[name] = {'temp': temp, 'alarm': alarm, 'panic': panic};
             callback();
         });
     });
