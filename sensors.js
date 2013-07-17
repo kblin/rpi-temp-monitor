@@ -1,8 +1,56 @@
-var fs = require('fs');
+var fs = require('fs'),
+    hw = require('./hardware');
 
 var sensors = {};
 
 var cache = {};
+
+var calming = false;
+
+function calmDown() {
+    cache.global_alarm = false;
+    cache.global_panic = false;
+    calming = false;
+    hw.setGreen();
+}
+
+function handleAlarm() {
+    hw.setYellow();
+    if (!calming) {
+        setTimeout(calmDown, 600000);
+        calming = true;
+    }
+}
+
+function handlePanic() {
+    hw.setRed();
+    if (!calming) {
+        setTimeout(calmDown, 600000);
+        calming = true;
+    }
+}
+
+
+function updateSensorCache() {
+    var all_sensors = availableSensors();
+    function next(todo_list) {
+        var curr = todo_list.shift();
+        if (curr === undefined) {
+            setTimeout(function(){updateSensorCache();}, 5000);
+            if (cache.global_panic) {
+                handlePanic();
+                return;
+            }
+            if (cache.global_alarm) {
+                handleAlarm();
+            }
+            return;
+        }
+        readSensorHW(curr, function() {next(todo_list);});
+    }
+    next(all_sensors);
+}
+
 
 /* Synchronously load the available sensors */
 function initSensors(sensors_file) {
@@ -28,6 +76,7 @@ function initSensors(sensors_file) {
     }
     cache.global_alarm = false;
     cache.global_panic = false;
+    updateSensorCache();
     return sensors;
 }
 
@@ -55,19 +104,20 @@ function readSensorHW(name, callback) {
                 throw "Invalid sensor data: " + data;
             }
             if (!lines[0].match(/ YES$/)) {
-                callback({'error': 'Failed to read sensor'});
+                cache[name] = undefined;
                 return;
             }
 
             var temp_pattern = /t=\d*/;
             var temp_string = temp_pattern.exec(lines[1]);
             if (temp_string === null) {
-                callback({'error': 'Failed to read sensor'});
+                cache[name] = undefined;
                 return;
             }
             temp_string = String(temp_string).substr(2);
             var temp = parseFloat(temp_string) / 1000;
-            callback({'temp': temp, 'alarm': false, 'panic': false});
+            cache[name] = {'temp': temp, 'alarm': false, 'panic': false};
+            callback();
         });
     });
 }
