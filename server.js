@@ -20,20 +20,18 @@ function handleStatus(request, response) {
 
 
 function handleSensor(name, request, response) {
-    console.log('handling ' + name);
     sensors.readSensor(name, function(values) {
         response.writeHead(200, {'Content-Type': 'application/json'});
         response.write(JSON.stringify(values));
         response.end();
     });
-};
+}
 
 function setupSensorHandlers(sensor, handlers) {
     handlers['/' + sensor] = function(request, response) {
         handleSensor(sensor, request, response);
-    }
+    };
 }
-    
 
 function start() {
     var handlers = {
@@ -49,7 +47,6 @@ function start() {
 
     function onRequest(request, response) {
         var pathname = url.parse(request.url).pathname;
-        console.log("got request for " +pathname);
         var handler = handlers[pathname];
         if (handler === undefined) {
             response.writeHead(404, {'Content-Type': 'text/plain'});
