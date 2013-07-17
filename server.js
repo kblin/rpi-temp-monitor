@@ -58,6 +58,7 @@ function start() {
 
     }
 
+    hw.setGreen();
     http.createServer(onRequest).listen('8367');
     console.log('server started and listening on port 8367');
 }
