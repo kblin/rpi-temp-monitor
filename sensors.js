@@ -2,6 +2,8 @@ var fs = require('fs');
 
 var sensors = {};
 
+var cache = {};
+
 /* Synchronously load the available sensors */
 function loadSensors(sensors_file) {
     if (!fs.existsSync(sensors_file)) {
@@ -24,6 +26,8 @@ function loadSensors(sensors_file) {
         sensors[elements[0]] = {'id': elements[1],
                       'warning-temp': elements[2], 'alarm-temp': elements[3]};
     }
+    cache.global_alarm = false;
+    cache.global_panic = false;
     return sensors;
 }
 
@@ -31,7 +35,7 @@ function availableSensors() {
     return Object.keys(sensors);
 }
 
-function readSensor(name, callback) {
+function readSensorHW(name, callback) {
     var sensor = sensors[name];
     if (sensor === undefined) {
         throw "No such sensor: " + name;
@@ -68,8 +72,17 @@ function readSensor(name, callback) {
     });
 }
 
+function readSensorCache(name, callback) {
+    var sensor = cache[name];
 
+    if (sensor === undefined) {
+        callback({'error': 'No data available for sensor ' + name});
+        return;
+    }
+
+    callback(sensor);
+}
 
 exports.loadSensors = loadSensors;
 exports.availableSensors = availableSensors;
-exports.readSensor = readSensor;
+exports.readSensor = readSensorCache;
