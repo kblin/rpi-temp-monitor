@@ -14,7 +14,7 @@ function handleAvailable(request, response) {
 
 function handleStatus(request, response) {
     response.writeHead(200, {'Content-Type': 'application/json'});
-    response.write(JSON.stringify({'status': 'ok'}));
+    response.write(JSON.stringify(sensors.getStatus()));
     response.end();
 }
 
