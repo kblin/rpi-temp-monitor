@@ -5,7 +5,7 @@ var sensors = {};
 var cache = {};
 
 /* Synchronously load the available sensors */
-function loadSensors(sensors_file) {
+function initSensors(sensors_file) {
     if (!fs.existsSync(sensors_file)) {
         throw "No sensors file at : " + sensors_file;
     }
@@ -83,6 +83,6 @@ function readSensorCache(name, callback) {
     callback(sensor);
 }
 
-exports.loadSensors = loadSensors;
+exports.initSensors = initSensors;
 exports.availableSensors = availableSensors;
 exports.readSensor = readSensorCache;

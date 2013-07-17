@@ -39,7 +39,7 @@ function start() {
         '/available': handleAvailable
     };
 
-    var available = sensors.loadSensors('/home/pi/sensors.txt');
+    var available = sensors.initSensors('/home/pi/sensors.txt');
 
     for (var name in available) {
         setupSensorHandlers(name, handlers);
