@@ -110,7 +110,7 @@ function readSensorHW(name, callback) {
                 return;
             }
 
-            var temp_pattern = /t=\d*/;
+            var temp_pattern = /t=-?\d*/;
             var temp_string = temp_pattern.exec(lines[1]);
             if (temp_string === null) {
                 console.log('Parsing error reading sensor ' + name);
