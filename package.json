@@ -1,6 +1,6 @@
 {
     "name": "rpi-temp-sensor",
-    "version" : "0.1.0",
+    "version" : "0.2.0",
     "description" : "temperature monitoring for the Raspberry Pi",
     "main" : "index.js",
     "dependencies" : {}

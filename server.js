@@ -35,7 +35,7 @@ function setupSensorHandlers(sensor, handlers) {
 
 function start() {
     var handlers = {
-        '/': handleStatus,
+        '/status': handleStatus,
         '/available': handleAvailable
     };
 
