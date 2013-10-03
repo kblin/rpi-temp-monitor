@@ -33,6 +33,39 @@ function setupSensorHandlers(sensor, handlers) {
     };
 }
 
+function handleFile(request, response) {
+    var pathname = url.parse(request.url).pathname;
+    if (pathname === '/') {
+        pathname = "/index.html";
+    }
+
+    pathname = "html" + pathname;
+    fs.exists(pathname, function(exists) {
+        if (exists) {
+            response.writeHead(200, {'Content-Type': getMimeType(pathname)});
+            fs.createReadStream(pathname).pipe(response);
+        } else {
+            response.writeHead(440, {'Content-Type': 'text/plain'});
+            response.write('Error 440: File not found');
+            response.end();
+        }
+    });
+}
+
+function getMimeType(name) {
+    var extension = name.split('.').pop();
+    switch(extension) {
+        case 'html':
+            return 'text/html';
+        case 'js':
+            return 'text/javascript';
+        case 'css':
+            return 'text/css';
+        default:
+            return 'text/plain';
+    }
+}
+
 function start() {
     var handlers = {
         '/status': handleStatus,
@@ -49,10 +82,7 @@ function start() {
         var pathname = url.parse(request.url).pathname;
         var handler = handlers[pathname];
         if (handler === undefined) {
-            response.writeHead(404, {'Content-Type': 'text/plain'});
-            response.write('404 no handler for ' + pathname);
-            response.end();
-            return;
+            handler = handleFile;
         }
         handler(request, response);
 
