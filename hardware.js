@@ -9,8 +9,8 @@ function gpio_export(pin, direction, callback) {
     }
     fs.exists('/sys/class/gpio/gpio' + pin, function(exists) {
         if (!exists) {
-            chld.execFile('gpio-admin', ['export', pin],
-                function(error, stdout, stderr) {
+            fs.writeFile('/sys/class/gpio/export', pin,
+                function(error) {
                     if(error) {
                         throw error;
                     }
