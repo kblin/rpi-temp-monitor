@@ -8,6 +8,8 @@ lib-cov
 *.pid
 *.gz
 
+fake_sensors.txt
+
 pids
 logs
 results
