@@ -25,9 +25,9 @@ function parse_sensors(data) {
 
         var elements = lines[i].split('\t');
         var name = elements[0];
-        var alarm_temp = elements[1];
-        var panic_temp = elements[2];
-        var temp = elements[3];
+        var alarm_temp = parseInt(elements[1], 10);
+        var panic_temp = parseInt(elements[2], 10);
+        var temp = parseInt(elements[3], 10);
 
         var alarm = temp > alarm_temp ? true: false;
         var panic = temp > panic_temp ? true: false;
