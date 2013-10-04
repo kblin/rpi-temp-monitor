@@ -122,7 +122,7 @@ function readSensorHW(name, callback) {
             var temp = parseFloat(temp_string) / 1000;
 
             var panic = temp > sensor.panic_temp ? true: false;
-            var alarm = temp > sensor.warning_temp ? true: false;
+            var alarm = temp > sensor.alarm_temp ? true: false;
             cache.global_panic |= panic;
             cache.global_alarm |= alarm;
 
