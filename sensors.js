@@ -17,7 +17,7 @@ function calmDown() {
 function handleAlarm() {
     hw.setYellow();
     if (!calming) {
-        setTimeout(calmDown, 600000);
+        setTimeout(calmDown, 60000);
         calming = true;
     }
 }
@@ -25,7 +25,7 @@ function handleAlarm() {
 function handlePanic() {
     hw.setRed();
     if (!calming) {
-        setTimeout(calmDown, 600000);
+        setTimeout(calmDown, 60000);
         calming = true;
     }
 }
