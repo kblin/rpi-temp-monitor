@@ -2,3 +2,11 @@
     margin: 0.1em;
     font-size: 300%;
 }
+
+.sensor-name {
+    text-transform: capitalize;
+}
+
+.global-status {
+    text-transform: uppercase;
+}
