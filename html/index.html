@@ -6,69 +6,30 @@
     <link href="css/style.css" rel="stylesheet" media="screen">
   </head>
   <body>
-    <div id="status-bar" class="alert alert-info">
-      Status: <span class="global-status">Unknown</span>
+    <div id="status-bar" class="alert" data-bind="css: global_status_level">
+      Status: <span class="global-status" data-bind="text: global_status">Unknown</span>
     </div>
-    <div class="row-fluid">
-      <div id="sensor-room" class="col-md-4">
-        <h3>Room</h3>
+    <div class="row-fluid" data-bind="foreach: sensors">
+      <div class="col-md-4">
+        <h3 class="sensor-name" data-bind="text: name"></h3>
         <div class="well text-center sensor">
-          <span class="temp text-success">22</span> &deg;C
-        </div>
-      </div>
-      <div id="sensor-rack" class="col-md-4">
-        <h3>Rack</h3>
-        <div class="well text-center sensor">
-          <span class="temp text-warning">32</span> &deg;C
-        </div>
-      </div>
-      <div id="sensor-freezer" class="col-md-4">
-        <h3>Freezer</h3>
-        <div class="well text-center sensor">
-          <span class="temp text-danger">-3</span> &deg;C
+          <span class="temp" data-bind="css: status, text: state.temp">-</span> &deg;C
         </div>
       </div>
     </div>
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.js"></script>
+    <script src="js/knockout.js"></script>
+    <script src="js/knockout.mapping.js"></script>
+    <script src="js/rpi-temp-monitor.js"></script>
     <script type="text/javascript">
-      function getStatus() {
-        $.getJSON("status", function(data) {
-            var level = "info";
-            var text = "unknown";
-            switch(data.status) {
-            case 'ok':
-              level = "success";
-              text = "OK";
-              break;
-            case 'alarm':
-              level = "warning";
-              text = "ALARM";
-              break;
-            case 'panic':
-              level = "danger";
-              text = "DANGER";
-              break;
-            }
-            $('#status-bar').removeClass()
-              .addClass('alert')
-              .addClass('alert-' + level);
-
-            $('.global-status').text(text);
-        });
-      }
-
-      function getAvailableSensors(callback) {
-        $.getJSON("available", callback);
-      }
-
-      function update() {
-        getStatus();
-      }
-
       $(document).ready(function(){
-          update();
-          setInterval(update, 5000);
+          var viewModel = new ViewModel();
+          viewModel.updateSensors();
+          viewModel.update();
+          ko.applyBindings(viewModel);
+          setInterval(viewModel.update, 1000);
+          setInterval(viewModel.updateSensors, 30000);
       });
     </script>
   </body>
