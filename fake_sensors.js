@@ -6,7 +6,7 @@ var fs = require('fs'),
 var sensors = {};
 var cache = {};
 
-var FAKE_SENSORS_FILE = 'fake_sensors.txt';
+var FAKE_SENSORS_FILE = __dirname + '/fake_sensors.txt';
 
 function parse_sensors(data) {
     cache.global_panic = false;

@@ -39,7 +39,7 @@ function handleFile(request, response) {
         pathname = "/index.html";
     }
 
-    pathname = "html" + pathname;
+    pathname = __dirname + "/html" + pathname;
     fs.exists(pathname, function(exists) {
         if (exists) {
             response.writeHead(200, {'Content-Type': getMimeType(pathname)});
