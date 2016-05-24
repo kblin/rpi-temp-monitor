@@ -73,6 +73,10 @@ function readSensor(name, callback) {
     fs.readFile(FAKE_SENSORS_FILE, file_read);
 }
 
+function readSensorSync(name){
+    return cache[name];
+}
+
 function getStatus() {
     var data = fs.readFileSync(FAKE_SENSORS_FILE);
     parse_sensors(data);
@@ -91,4 +95,5 @@ function getStatus() {
 exports.initSensors = initSensors;
 exports.availableSensors = availableSensors;
 exports.readSensor = readSensor;
+exports.readSensorSync = readSensorSync;
 exports.getStatus = getStatus;

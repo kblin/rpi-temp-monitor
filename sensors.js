@@ -143,6 +143,10 @@ function readSensorCache(name, callback) {
     callback(sensor);
 }
 
+function readSensorCacheSync(name) {
+    return cache[name];
+}
+
 function getStatus() {
     if (cache.global_panic) {
         return {'status': 'panic'};
@@ -156,4 +160,5 @@ function getStatus() {
 exports.initSensors = initSensors;
 exports.availableSensors = availableSensors;
 exports.readSensor = readSensorCache;
+exports.readSensorSync = readSensorCacheSync;
 exports.getStatus = getStatus;
